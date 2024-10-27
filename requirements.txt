@@ -5,3 +5,4 @@ scikit-surprise
 cython
 pickleshare
 seaborn
+numpy==1.26.4
