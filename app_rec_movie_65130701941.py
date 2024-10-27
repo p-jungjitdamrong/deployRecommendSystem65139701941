@@ -41,7 +41,7 @@ if st.button("Get Recommendations"):
         top_recommendations = get_top_recommendations(user_id, svd_model, movie_ratings, movies, number_movie)
         st.subheader(f"Top {number_movie} Movie Recommendations for User {user_id}:")
         for title, rating in top_recommendations:
-            star_rating = get_star_rating(rating.est)
-            st.write(f"{title} ({star_rating} - Estimated Rating: {rating.est:.2f})")
+            star_rating = get_star_rating(rating)
+            st.write(f"{title} - Estimated Rating: {rating:.2f} {star_rating}")
     else:
         st.write("Please enter a valid User ID.")
