@@ -3,5 +3,5 @@ pandas
 scikit-learn
 scikit-surprise
 numpy
-streamlit
+Cython
  
