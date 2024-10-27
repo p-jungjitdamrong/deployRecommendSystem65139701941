@@ -1,4 +1,8 @@
 
-scikit-learn==1.2.2
 pandas
+scikit-learn
+pickle
+surprise
+numpy
+streamlit
  
