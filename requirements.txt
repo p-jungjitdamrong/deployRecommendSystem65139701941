@@ -1,6 +1,5 @@
 streamlit
 pandas
-Cython
-scikit-surprise
 scikit-learn
-pickle
+scikit-surprise
+Cython
