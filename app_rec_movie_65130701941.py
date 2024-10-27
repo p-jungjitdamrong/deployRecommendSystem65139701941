@@ -1,49 +1,37 @@
-
-# prompt: # Generate app for streamlit.io use above content with recommendation_movie_svd.pkl
-
 import streamlit as st
 import pickle
-import pandas as pd
 
-# Load the saved model and data
-with open('recommendation_movie_svd.pkl', 'rb') as file:
-    svd_model, movie_ratings, movies = pickle.load(file)
+# Load data back from the file
+@st.cache_data
+def load_model():
+    with open('recommendation_movie_svd.pkl', 'rb') as file:
+        svd_model, movie_ratings, movies = pickle.load(file)
+    return svd_model, movie_ratings, movies
 
-def get_recommendations(user_id, top_n=10):
-    """
-    Generates top N movie recommendations for a given user ID.
-
-    Args:
-        user_id: The ID of the user for whom to generate recommendations.
-        top_n: The number of top recommendations to return.
-
-    Returns:
-        A list of top N movie recommendations.
-    """
+# Function to get top N recommendations for a user
+def get_top_recommendations(user_id, svd_model, movie_ratings, movies, top_n=10):
     rated_user_movies = movie_ratings[movie_ratings['userId'] == user_id]['movieId'].values
     unrated_movies = movies[~movies['movieId'].isin(rated_user_movies)]['movieId']
     pred_rating = [svd_model.predict(user_id, movie_id) for movie_id in unrated_movies]
     sorted_predictions = sorted(pred_rating, key=lambda x: x.est, reverse=True)
     top_recommendations = sorted_predictions[:top_n]
-    recommendations = []
-    for recommendation in top_recommendations:
-        movie_title = movies[movies['movieId'] == recommendation.iid]['title'].values[0]
-        recommendations.append((movie_title, recommendation.est))
-    return recommendations
+    return [(movies[movies['movieId'] == rec.iid]['title'].values[0], rec.est) for rec in top_recommendations]
 
 # Streamlit app
 st.title("Movie Recommendation System")
 
-# Get user input for user ID
-user_id = st.number_input("Enter your user ID:", min_value=1, value=1)
+# Load the SVD model and data
+svd_model, movie_ratings, movies = load_model()
 
-# Generate recommendations
+# Input for user ID
+user_id = st.number_input("Enter User ID:", min_value=1, step=1)
+
+# Button to get recommendations
 if st.button("Get Recommendations"):
-    recommendations = get_recommendations(user_id)
-    if recommendations:
-        st.subheader("Top 10 Recommended Movies:")
-        for movie_title, est_rating in recommendations:
-            st.write(f"- {movie_title} (Estimated Rating: {est_rating:.2f})")
+    if user_id:
+        top_recommendations = get_top_recommendations(user_id, svd_model, movie_ratings, movies)
+        st.subheader(f"Top 10 Movie Recommendations for User {user_id}:")
+        for title, rating in top_recommendations:
+            st.write(f"{title} (Estimated Rating: {rating:.2f})")
     else:
-        st.write("No recommendations found for this user.")
-
+        st.write("Please enter a valid User ID.")
