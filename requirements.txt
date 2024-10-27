@@ -4,4 +4,3 @@ scikit-learn
 scikit-surprise
 numpy
 Cython
-pickle
