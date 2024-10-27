@@ -4,3 +4,4 @@ pandas
 Cython
 scikit-surprise
 scikit-learn
+pickle
