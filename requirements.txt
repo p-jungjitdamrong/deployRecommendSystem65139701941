@@ -1,6 +1,5 @@
 
+streamlit
 pandas
-scikit-learn
-scikit-surprise
-numpy
 Cython
+git+https://github.com/NicolasHug/Surprise.git
