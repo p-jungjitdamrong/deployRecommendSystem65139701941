@@ -23,13 +23,15 @@ st.title("Movie Recommendation System")
 # Load the SVD model and data
 svd_model, movie_ratings, movies = load_model()
 
+number_movie = st.number_input("Enter Number Movie to recommend:", min_value=1, step=1, value=10)
+
 # Input for user ID
 user_id = st.number_input("Enter User ID:", min_value=1, step=1)
 
 # Button to get recommendations
 if st.button("Get Recommendations"):
     if user_id:
-        top_recommendations = get_top_recommendations(user_id, svd_model, movie_ratings, movies)
+        top_recommendations = get_top_recommendations(user_id, svd_model, movie_ratings, movies, number_movie)
         st.subheader(f"Top 10 Movie Recommendations for User {user_id}:")
         for title, rating in top_recommendations:
             st.write(f"{title} (Estimated Rating: {rating:.2f})")
