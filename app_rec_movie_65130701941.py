@@ -1,6 +1,13 @@
 import streamlit as st
 import pickle
 
+
+# Function to convert rating to stars
+def get_star_rating(rating, max_stars=5):
+    # Convert the rating to a scale of max_stars
+    filled_stars = int(round((rating / 5) * max_stars))
+    return '★' * filled_stars + '☆' * (max_stars - filled_stars)
+
 # Load data back from the file
 @st.cache_data
 def load_model():
@@ -34,6 +41,7 @@ if st.button("Get Recommendations"):
         top_recommendations = get_top_recommendations(user_id, svd_model, movie_ratings, movies, number_movie)
         st.subheader(f"Top {number_movie} Movie Recommendations for User {user_id}:")
         for title, rating in top_recommendations:
-            st.write(f"{title} (Estimated Rating: {rating:.2f})")
+            star_rating = get_star_rating(recommendation.est)
+            st.write(f"{title} ({star_rating} - Estimated Rating: {recommendation.est:.2f})")
     else:
         st.write("Please enter a valid User ID.")
